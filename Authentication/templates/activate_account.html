@@ -1,0 +1,74 @@
+{% extends "master.html" %}
+
+{% block title %}
+ShipShop - Activate Account
+{% endblock title %}
+
+{% block content %}
+<!-- Section: Design Block -->
+<section class="text-center">
+    <!-- Background image -->
+    <div class="p-5 bg-image" style="
+          background-image: url('https://mdbootstrap.com/img/new/textures/full/171.jpg');
+          height: 200px;
+          "></div>
+    <!-- Background image -->
+  
+    <div class="card mx-4 mx-md-5 shadow-5-strong bg-body-tertiary" style="
+          margin-top: -100px;
+          backdrop-filter: blur(30px);
+          ">
+      <div class="card-body py-5 px-md-5">
+  
+        <div class="row d-flex justify-content-center">
+          <div class="col-lg-8">
+            <h2 class="fw-bold mb-5">ShipShop - Activate your account</h2>
+            {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-primary" role="alert">
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+            {% endif %}
+
+            <form method = "POST">
+                {% csrf_token %}
+  
+              <!-- Email input -->
+              <div data-mdb-input-init class="form-outline mb-2">
+                <input type="email" id="email" name= "email" value = "{{email}}" placeholder="Enter email id" class="form-control" required {% if otp_sent %}disabled{% endif %}/>
+                <label class="form-label" for="email">Email</label>
+              </div>
+  
+              <!-- Submit button -->
+              <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4" name="form_type" value="request_otp" {% if otp_sent %}disabled{% endif %}>
+                Get Otp
+              </button>
+            </form>
+
+            {% if otp_sent %}
+            <form method = "POST" class="mt-2">
+                {% csrf_token %}
+  
+              <div data-mdb-input-init class="form-outline mx-2">
+                <input type="number" id="otp" name= "otp" value = "" placeholder="Enter Otp" class="form-control" />
+                <label class="form-label" for="otp">Otp</label>
+              </div>
+  
+              <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4" name="form_type" value="verify_otp">
+                Activate Account
+              </button>
+            </form>
+            {% endif %}
+
+            <p>
+                Don't have an account?
+                <a href="/auth/register" class="text-decoration-none">Register now</a>
+            </p>
+            <p><a href= "/auth/login" class="text-decoration-none"> Login </a><span> | </span><a href= "/auth/forget-password" class="text-decoration-none"> Forget password </a> </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

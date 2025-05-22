@@ -1,0 +1,75 @@
+{% extends "master.html" %}
+
+{% block title %}
+Admin Portal - All Product category
+{% endblock title %}
+
+{% block navbar %}
+{% include "navbar.html" with first_name=request.user.first_name %}
+{% endblock %}
+
+{% block content %}
+    <section class="w-100 px-4 py-5" style=" border-radius: .5rem .5rem 0 0;">
+        <div class="row d-flex justify-content-center">
+          <div class="col col-md-9 col-lg-11 col-xl-11">
+            <div class="card" style="border-radius: 15px;">
+              <div class="card-body p-4">
+                {% include "message_display.html" %}
+
+                <h1 class="text-center my-3 pb-3">Admin Dashboard - Product</h1>
+                <hr>
+                <form method="GET" class="w-100 mb-3">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            {% if category %}
+                                <div class="me-auto mb-2">
+                                    <h5 class="mb-0">Search for "{{ category }}"</h5>
+                                </div>
+                                {% else %}
+                                <div></div>
+                            {% endif %}
+                            <div class="d-flex align-items-center flex-nowrap" style="gap: 10px;">
+                                <input type="text" name="q" class="form-control" placeholder="Search for category..." style="max-width: 250px;">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                                <a href="/admin-portal/product/product-category" class="btn btn-secondary text-nowrap">Clear Search</a>
+                            </div>
+                        </div>
+                    </form>
+
+                
+                <hr>
+                
+                <div class="container mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="mb-0">All Product Category</h2>
+                        <a href="/admin-portal/product/add-category" class="btn btn-success text-nowrap">Add new category</a>
+
+                    </div>
+
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Actions </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for category in allCategory %}
+                        
+                            <tr>
+                                <td>{{ category.name }}</td>
+                                <td>{{ category.description }}</td>
+                                <td> <a href = "/admin-portal/product/delete-category/{{category.id}}?next={{ request.path }}" onclick="return confirm('Are you sure you want to delete this product category?');"> <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger">Delete</button></a>
+                            </tr>
+                        
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+{% endblock content %}

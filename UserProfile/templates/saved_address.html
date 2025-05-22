@@ -1,0 +1,70 @@
+{% extends "master.html" %}
+
+{% block title %}
+ShipShop - Saved address
+{% endblock title %}
+
+{% block style %}
+    .address-card {
+        transition: transform 0.2s ease;
+    }
+    .address-card:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+    }
+{% endblock style %}
+
+
+{% block navbar %}
+{% include "navbar.html" with first_name=request.user.first_name %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">Saved Addresses</h2>
+        <a href="/profile/add-new-address" class="btn btn-primary">+ Add New Address</a>
+    </div>
+
+    {% include "message_display.html" %}
+
+    {% if addresses %}
+        <div class="row">
+            {% for address in addresses %}
+                <div class="col-12 mb-4">
+                    <div class="card shadow-sm address-card hover-shadow">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">{{ address.user.get_full_name }}</h5>
+
+                            <div class="row">
+                                <p class="mb-2"><strong>Full name</strong> {{ address.first_name }} {{address.last_name}}</p>
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Address Line 1:</strong> {{ address.address_line1 }}</p>
+                                    <p class="mb-2"><strong>Landmark:</strong> {{ address.landmark }}</p>
+                                    <p class="mb-2"><strong>State:</strong> {{ address.state }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Address Line 2:</strong> {{ address.address_line2 }}</p>
+                                    <p class="mb-2"><strong>City:</strong> {{ address.city }}</p>
+                                    <p class="mb-2"><strong>Pincode:</strong> {{ address.pincode }}</p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <p class="text-muted small mb-0">
+                                    <strong>Added:</strong> {{ address.created_at|date:"M d, Y H:i" }}
+                                </p>
+                                <a href="/profile/edit-address/{{ address.id }}" class="btn btn-outline-primary px-4">Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">No saved addresses found.</div>
+    {% endif %}
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,60 @@
+{% extends "master.html" %}
+
+{% block title %}
+ShipShop - Queries
+{% endblock title %}
+
+{% block navbar %}
+{% include "navbar.html" with first_name=request.user.first_name %}
+{% endblock %}
+
+{% block style %}
+    .query-card {
+        transition: transform 0.2s ease;
+    }
+    .query-card:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+{% endblock style %}
+
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-2">
+        <h1 class="fw-bold">User Queries</h1>
+        <p class="text-muted">Browse the list of queries submitted by users</p>
+    </div>
+
+    {% if queries %}
+        {% for query in queries %}
+            <div class="card mb-3 shadow-sm query-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap">
+                        <h4 class="card-title">{{ query.title }}</h4>
+                        <div class="text-end">
+                            {% if query.status == "Resolved" %}
+                                <span class="badge bg-success">Resolved</span>
+                            {% elif query.status == "In progress" %}
+                                <span class="badge bg-info text-dark">In Progress</span>
+                            {% elif query.status == "Hold" %}
+                                <span class="badge bg-danger">Hold</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ query.status }}</span>
+                            {% endif %}
+                            <small class="d-block text-muted mt-1">{{ query.created_at|date:"M d, Y H:i" }}</small>
+                        </div>
+                    </div>
+                    <p class="card-text text-secondary my-0">{{ query.description|truncatechars:200 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-muted small">From: {{ user.first_name }} ({{ user.email }})</div>
+                        <a href="/profile/query/{{ query.id }}" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info text-center">No queries found.</div>
+    {% endif %}
+</div>
+{% endblock content %}

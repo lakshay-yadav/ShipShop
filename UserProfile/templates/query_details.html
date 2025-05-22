@@ -1,0 +1,54 @@
+{% extends "master.html" %}
+
+{% block title %}
+ShipShop - Query detail
+{% endblock title %}
+
+{% block navbar %}
+{% include "navbar.html" with first_name=request.user.first_name %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <a href="/profile/queries" class="btn btn-link mb-1 text-decoration-none">&larr; Back to queries</a>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-secondary text-white">
+            <h3 class="mb-0">Query Details</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-4">
+                <h5 class="text-secondary">Submitted by</h5>
+                <p class="mb-1"><strong>User:</strong> {{ request.user.first_name }}</p>
+                <p class="mb-1"><strong>Email:</strong> {{ request.user.email }}</p>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="text-secondary">Query Information</h5>
+                <p class="mb-1"><strong>Title:</strong> {{ query.title }}</p>
+                <p><strong>Description:</strong> {{ query.description }}</p>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="text-secondary">Status</h5>
+                <p class="mb-1">
+                    <strong>Status:</strong> 
+                    {% if query.status == "Resolved" %}
+                        <span class="badge bg-success">Resolved</span>
+                    {% elif query.status == "Pending" %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ query.status }}</span>
+                    {% endif %}
+                </p>
+                <p class="mb-1"><strong>Remarks:</strong> {{ query.remarks|default:"—" }}</p>
+            </div>
+
+            <div class="text-muted mt-4">
+                <p class="mb-1"><strong>Created at:</strong> {{ query.created_at|date:"M d, Y - H:i" }}</p>
+                <p><strong>Last updated:</strong> {{ query.updated_at|date:"M d, Y - H:i" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

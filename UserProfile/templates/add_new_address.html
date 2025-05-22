@@ -1,0 +1,93 @@
+{% extends "master.html" %}
+
+{% block title %}
+ShipShop - Add new address
+{% endblock title %}
+
+{% block style %}
+    .address-card {
+        transition: transform 0.2s ease;
+    }
+    .address-card:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+    }
+{% endblock style %}
+
+
+{% block navbar %}
+{% include "navbar.html" with first_name=request.user.first_name %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="">
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0">Add New Address</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="first_name" class="form-label">First name</label>
+                                <input type="text" name="first_name" id="first_name" class="form-control" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="last_name" class="form-label">Last name</label>
+                                <input type="text" name="last_name" id="last_name" class="form-control" required>
+                            </div>
+                            
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address_line1" class="form-label">Address Line 1</label>
+                            <input type="text" name="address_line1" id="address_line1" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address_line2" class="form-label">Address Line 2</label>
+                            <input type="text" name="address_line2" id="address_line2" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="landmark" class="form-label">Landmark</label>
+                            <input type="text" name="landmark" id="landmark" class="form-control">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="city" class="form-label">City</label>
+                                <input type="text" name="city" id="city" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="state" class="form-label">State</label>
+                                <select name="state" id="state" class="form-select" required>
+                                    <option value="">-- Select State --</option>
+                                    {% for code, name in state_choices %}
+                                        <option value="{{ code }}">{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pincode" class="form-label">Pincode</label>
+                            <input type="number" name="pincode" id="pincode" class="form-control" required>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Save Address</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
