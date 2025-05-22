@@ -12,7 +12,7 @@ from decouple import config
 from utils.email_utils import send_email_async
 
 
-@login_required(login_url="/auth/profile")
+@login_required(login_url="/auth/login")
 def profile(request):
     return render(request,"profile.html")
 
@@ -65,7 +65,41 @@ def orders(request):
 
 @login_required(login_url="/auth/login")
 def wishlist(request):
-    return render(request,"wishlist.html")
+    user = request.user
+    wishlist_items = Wishlist.objects.filter(user = user)
+    return render(request,"wishlist.html",{'wishlist_items': wishlist_items})
+
+
+@login_required(login_url="/auth/login")
+def add_to_wishlist(request,product_id):
+    user = request.user
+    isAdded = Wishlist.objects.filter(user=user,product__id = product_id)
+    if isAdded:
+        messages.info(request,"Already in wishlist")
+        return redirect(f"/product-details/{product_id}")
+    
+    product = Product.objects.get(id = product_id)
+
+    Wishlist.objects.create(
+        user = user,
+        product = product
+    )
+
+    messages.info(request,"Product added to wishlist")
+
+    return redirect(f"/product-details/{product_id}")
+
+
+@login_required(login_url="/auth/login")
+def delete_from_wishlist(request,product_id):
+    next_url = request.GET.get('next')
+    user = request.user
+    wishlist_item = Wishlist.objects.filter(user = user)
+    if wishlist_item:
+        wishlist_item.delete()
+        messages.info(request,"Item removed from Wishlist")
+
+    return redirect(next_url)
 
 
 @login_required(login_url="/auth/login")
@@ -216,3 +250,8 @@ def deactivate_account(request,id):
 
     messages.info(request,"Successfully deactivated account")
     return redirect("/")
+
+
+@login_required(login_url="/auth/login")
+def reviews(request):
+    return render(request,"reviews.html")

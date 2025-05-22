@@ -48,6 +48,8 @@ EXTERNAL_APPS = [
     'AdminPortal',
     'payment',
     'UserProfile',
+    'Order',
+    'Cart',
 ]
 
 INSTALLED_APPS += EXTERNAL_APPS

@@ -240,4 +240,107 @@ def add_category(request):
 @user_passes_test(is_admin)
 @login_required(login_url="/auth/login")
 def all_product(request):
-    pass
+    product = request.GET.get('q')
+
+    if product:
+        allProducts = Product.objects.filter(name__icontains = product)
+
+    else:
+        allProducts = Product.objects.all()
+
+    context = {
+        "user" : request.user,
+        "allProducts" : allProducts,
+        "product" : product,
+    }
+    return render(request,"all_product.html",context)
+
+
+@user_passes_test(is_admin)
+@login_required(login_url="/auth/login")
+def add_product(request):
+    if request.method == 'POST':
+        category_id = request.POST.get('category')
+        name = request.POST.get('name')
+        description = request.POST.get('description', '')
+        price = request.POST.get('price')
+        discount = request.POST.get('discount', 0)
+        stock = request.POST.get('stock')
+        new = request.POST.get('new') == 'on'
+
+        is_available = stock !=0
+
+        try:
+            category = Category.objects.get(id=category_id)
+            Product.objects.create(
+                category=category,
+                name=name,
+                description=description,
+                price=price,
+                discount=discount,
+                stock=stock,
+                new=new,
+                is_available = is_available
+            )
+            return redirect('/admin-portal/product/all-product')
+        
+        except Category.DoesNotExist:
+            return render(request, 'add_product.html', {
+                'categories': Category.objects.all(),
+                'error': 'Invalid category selected.'
+            })
+        
+    categories = Category.objects.all() 
+    return render(request,"add_product.html",{'categories': categories})
+
+
+@user_passes_test(is_admin)
+@login_required(login_url="/auth/login")
+def delete_product(request,id):
+    next_url = request.GET.get('next','/admin-portal/product/all-product')
+    product = Product.objects.get(id = id)
+    product.delete()
+
+    messages.info(request,"Product deleted")
+    return redirect(next_url)
+
+
+@user_passes_test(is_admin)
+@login_required(login_url="/auth/login")
+def edit_product(request,id):
+    categories = Category.objects.all() 
+    next_url = request.GET.get('next','/admin-portal/product/all-product')
+    product = Product.objects.get(id = id)
+
+    if request.method == "POST":
+        category_id = request.POST.get('category')
+        name = request.POST.get('name')
+        description = request.POST.get('description', '')
+        price = request.POST.get('price')
+        discount = request.POST.get('discount', 0)
+        stock = request.POST.get('stock')
+        new = request.POST.get('new') == 'on'
+
+
+        try:
+            category = Category.objects.get(id=category_id)
+            
+            product.category = category
+            product.name = name
+            product.description = description
+            product.price = price
+            product.discount = discount
+            product.stock = stock
+            product.new = new
+
+            return redirect(next_url)
+        
+        except Category.DoesNotExist:
+            return render(request, 'add_product.html', {
+                'categories': Category.objects.all(),
+                'error': 'Invalid category selected.'
+            })
+
+
+    return render(request,"edit_product.html",{'product':product,'categories':categories})
+

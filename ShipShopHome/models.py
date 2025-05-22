@@ -47,41 +47,39 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
-    # def averageRating(self):
-    #     reviews = ReviewRating.objects.filter(product=self, status=True).aggregate(average=Avg('rating'))
-    #     avg = 0
-    #     if reviews['average'] is not None:
-    #         avg = float(reviews['average'])
-    #     return avg
+    def averageRating(self):
+        reviews = ReviewRating.objects.filter(product=self, status=True).aggregate(average=Avg('rating'))
+        avg = 0
+        if reviews['average'] is not None:
+            avg = float(reviews['average'])
+        return avg
     
-    # def countReview(self):
-    #     reviews = ReviewRating.objects.filter(product=self, status=True).aggregate(count=Count('id'))
-    #     count = 0
-    #     if reviews['count'] is not None:
-    #         count = int(reviews['count'])
-    #     return count
+    def countReview(self):
+        reviews = ReviewRating.objects.filter(product=self, status=True).aggregate(count=Count('id'))
+        count = 0
+        if reviews['count'] is not None:
+            count = int(reviews['count'])
+        return count
     
     class Meta:
         verbose_name_plural = 'Products'
         ordering = ('-added_at',)
 
 
-# class ReviewRating(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-#     # subject = models.CharField(max_length=100, blank=True)
-#     review = models.TextField(blank=True)
-#     rating = models.FloatField()
-#     ip = models.CharField(max_length=20, blank=True)
-#     status = models.BooleanField(default=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
+class ReviewRating(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=100, blank=True)
+    review = models.TextField(blank=True)
+    rating = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-#     def update_at(self):
-#         return self.updated_at.strftime('%B %d, %Y')
+    def update_at(self):
+        return self.updated_at.strftime('%B %d, %Y')
 
-#     def hour_update(self):
-#         return self.updated_at.strftime('%H:%M:%S')
+    def hour_update(self):
+        return self.updated_at.strftime('%H:%M:%S')
 
-#     def __str__(self):
-#         return self.review
+    def __str__(self):
+        return self.review

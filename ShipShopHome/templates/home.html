@@ -1,13 +1,140 @@
 {% extends "master.html" %}
 
+{% load static %}
+
 {% block title %}
 ShipShop - Home
 {% endblock title %}
+
+{% block style %}
+body {
+      background-color: #f4f6f8;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .hero {
+      background: linear-gradient(to right, #007bff, #00c6ff);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+      border-radius: 15px;
+      margin-bottom: 40px;
+    }
+
+    .category-block {
+      margin-top: 60px;
+    }
+
+    .category-title {
+      border-left: 5px solid #007bff;
+      padding-left: 15px;
+      margin-bottom: 20px;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #343a40;
+    }
+
+    .product-card {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      transition: transform 0.25s;
+      background: white;
+    }
+
+    .product-card:hover {
+      transform: scale(1.02);
+    }
+
+    .card-img-top {
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .badge-new {
+      background-color: #28a745;
+    }
+
+    .badge-discount {
+      background-color: #dc3545;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .product-price {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #000;
+    }
+    img{
+        height: 10px,
+    }
+{% endblock style %}
+
 
 {% block navbar %}
 {% include "navbar.html" with first_name=request.user.first_name %}
 {% endblock %}
 
 {% block content %}
-This is home page 
+<section class="bg-primary text-white py-5 text-center">
+  <div class="container">
+    <h1 class="display-4 fw-bold">Welcome to ShipShop</h1>
+    <p class="lead">Explore thousands of products across multiple categories</p>
+    <a href="#shop" class="btn btn-light btn-lg mt-3">Shop Now</a>
+  </div>
+</section>
+
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-4">Shop by Category</h2>
+    <div class="row text-center">
+      {% for category in categories %}
+      <div class="col-6 col-md-3 mb-4">
+        <a href="/category/{{ category.name }}" class="text-decoration-none">
+          <div class="card shadow-sm h-100">
+            <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ category.name }}</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="shop" class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">All Products</h2>
+    </div>
+    <div class="row">
+      {% for category in categories %}
+      {% for product in category.products %}
+      <div class="col-6 col-md-4 col-lg-3 mb-4">
+        <div class="card h-100 shadow-sm">
+          <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text text-muted">{{ product.description|truncatechars:60 }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold">${{ product.price }}</span>
+              <a href="/product-details/{{product.id}}" class="btn btn-sm btn-primary">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
 {% endblock content %}

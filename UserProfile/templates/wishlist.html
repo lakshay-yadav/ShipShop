@@ -1,13 +1,110 @@
 {% extends "master.html" %}
 
+{% load static %}
+
 {% block title %}
 ShipShop - Wishlist
 {% endblock title %}
+
+{% block style %}
+body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .wishlist-container {
+      margin-top: 60px;
+    }
+
+    .wishlist-title {
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .product-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      transition: transform 0.2s;
+      background: white;
+    }
+
+    .product-card:hover {
+      transform: scale(1.01);
+    }
+
+    .card-img-top {
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .badge-discount {
+      background-color: #dc3545;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .product-price {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #000;
+    }
+
+    .card-body .btn {
+      font-size: 0.9rem;
+    }
+  </style>
+{% endblock style %}
+
 
 {% block navbar %}
 {% include "navbar.html" with first_name=request.user.first_name %}
 {% endblock %}
 
 {% block content %}
-This is Wishlist page 
+<div class="container wishlist-container pb-5">
+  <h2 class="wishlist-title text-center">🧡 My Wishlist</h2>
+  {% include "message_display.html" %}
+
+  {% if wishlist_items %}
+  <div class="row g-4">
+    {% for item in wishlist_items %}
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="card product-card h-100">
+        <img src="{% static "img/phone.png" %}?text={{ item.product.name|urlencode }}" class="card-img-top" alt="{{ item.product.name }}">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.product.name }}</h5>
+          <p class="card-text text-muted small">{{ item.product.description|truncatewords:15 }}</p>
+
+          <div class="mb-2">
+            {% if item.product.discount > 0 %}
+              <span class="original-price me-2">${{ item.product.price }}</span>
+              <span class="product-price">${{ item.product.price|floatformat:2|add:"-"|add:item.product.discount|floatformat:2 }}</span>
+              <span class="badge badge-discount ms-1">-{{ item.product.discount|floatformat:0 }}</span>
+            {% else %}
+              <span class="product-price">${{ item.product.price }}</span>
+            {% endif %}
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="" class="btn btn-outline-primary btn-sm">Add to Cart</a>
+            <a href="/profile/delete-from-wishlist/{{ item.product.id }}?next={{ request.path }}" class="btn btn-outline-danger btn-sm">Remove</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center mt-5">
+    <p class="text-muted">Your wishlist is empty. Start adding products you love!</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Browse Products</a>
+  </div>
+  {% endif %}
+</div>
+
 {% endblock content %}

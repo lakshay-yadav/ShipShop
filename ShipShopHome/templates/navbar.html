@@ -1,37 +1,31 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand mx-3" href="/">Home</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg navbar-shipshop">
+  <div class="container-fluid">
+    <a class="navbar-brand " href="/">ShipShop</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
       <span class="navbar-toggler-icon"></span>
     </button>
-  
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/">ShipShop</a>
+
+    <div class="collapse navbar-collapse justify-content-between" id="navbarResponsive">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/profile/wishlist"><i class="fas fa-heart me-1"></i>Wishlist</a>
         </li>
       </ul>
-    </div>  
-  {% if request.user.is_authenticated %}
-    {% if request.user.isAdmin %}
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mx-1">
-      <a href = "/admin-portal/product"><button class="btn btn-outline-primary align-right">Admin - Product</button></a>
+
+      <div class="d-flex flex-wrap align-items-center nav-action">
+        {% if request.user.is_authenticated %}
+          {% if request.user.isAdmin %}
+            <a href="/admin-portal/product" class="btn btn-warning nav-icon-btn"><i class="fas fa-cubes"></i>Admin Products</a>
+            <a href="/admin-portal" class="btn btn-warning nav-icon-btn"><i class="fas fa-users-cog"></i>Admin Users</a>
+          {% endif %}
+          <a href="/profile" class="btn btn-outline-light nav-icon-btn"><i class="fas fa-user"></i>{{ first_name }}</a>
+          <a href="/cart" class="btn btn-success nav-icon-btn"><i class="fas fa-shopping-cart"></i>Cart</a>
+          <a href="/auth/logout" class="btn btn-danger nav-icon-btn"><i class="fas fa-sign-out-alt"></i>Logout</a>
+        {% else %}
+          <a href="/auth/login" class="btn btn-danger nav-icon-btn"><i class="fas fa-sign-in-alt"></i>Login</a>
+        {% endif %}
+      </div>
     </div>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mx-1">
-      <a href = "/admin-portal"><button class="btn btn-outline-primary align-right">Admin - Users</button></a>
   </div>
-    {% endif %}
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mx-1">
-      <a href = "/profile"><button class="btn btn-outline-primary align-right">{{first_name}}</button></a>
-  </div>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mx-1">
-        <a href = ""><button class="btn btn-outline-success align-right">Cart</button></a>
-    </div>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mx-2">
-        <a href = "/auth/logout"><button class="btn btn-outline-danger align-right">Log out</button></a>
-    </div>
-    {% else %}
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mx-2 align-items-end-0">
-        <a href = "/auth/login"><button class="btn btn-outline-danger align-right">Log in</button></a>
-    </div>
-    {% endif %}
-  </nav>
+</nav>

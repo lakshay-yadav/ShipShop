@@ -23,4 +23,6 @@ urlpatterns = [
     path('admin-portal/',include('AdminPortal.urls')),
     path('payment/',include("payment.urls")),
     path('profile/',include("UserProfile.urls")),
+    path('orders/',include("Order.urls")),
+    path('cart/',include("Cart.urls")),
 ]

@@ -2,13 +2,23 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from utils.email_utils import send_email_async
+from Authentication.models import CustomUser as User
+from ShipShopHome.models import Query,Category,Product
 from .models import Query
 from decouple import config
 
 
 # Create your views here.
 def home(request):
-    return render(request,"home.html")
+    categories = Category.objects.all()
+    for category in categories:
+        category.products = Product.objects.filter(category=category, stock__gt=0)
+    return render(request,"home.html",{'categories': categories})
+
+
+def product_details(request,product_id):
+    product = Product.objects.get(id = product_id)
+    return render(request,"product_details.html",{"product":product,})
 
 
 def policy(request):
@@ -51,3 +61,17 @@ def contact_us(request):
             return redirect("/contact-us")
 
     return render(request,"contact_us.html")
+
+
+def product_by_category(request,name):
+    allProducts = Product.objects.filter(category__name=name)
+    query = request.GET.get('q')
+    if query:
+        allProducts = allProducts.filter(name__icontains=query)
+
+    context = {
+        "allProducts" : allProducts,
+        "category_name" : name,
+        "query" : query
+    }
+    return render(request,"product_by_category.html",context)

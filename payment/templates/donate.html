@@ -1,7 +1,7 @@
 {% extends "master.html" %}
 
 {% block title %}
-Donate for Coffee
+Send Coffee
 {% endblock title %}
 
 {% block navbar %}
@@ -9,45 +9,52 @@ Donate for Coffee
 {% endblock %}
 
 {% block content %}
-<!-- Section: Design Block -->
 <section class="text-center">
-    <!-- Background image -->
-    <div class="p-5 bg-image" style="
-          background-image: url('https://mdbootstrap.com/img/new/textures/full/171.jpg');
-          height: 200px;
-          "></div>
-    <!-- Background image -->
-  
-    <div class="card mx-4 mx-md-5 shadow-5-strong bg-body-tertiary" style="
-          margin-top: -100px;
-          backdrop-filter: blur(30px);
-          ">
-      <div class="card-body py-5 px-md-5">
-  
-        <div class="row d-flex justify-content-center">
-          <div class="col-lg-8">
-            <h2 class="fw-bold mb-5">Donate for Coffee</h2>
+  <div class="p-5 text-white bg-dark" style="
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+        url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1470&q=80') no-repeat center center;
+        background-size: cover;
+        height: 220px;">
+    <h1 class="display-5 fw-bold">☕ Donate for Coffee</h1>
+    <p class="lead">Support the developer and keep ShipShop energized!</p>
+  </div>
+
+  <div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-8">
+        <div class="card shadow-lg border-0">
+          <div class="card-body p-5">
+
             {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert alert-primary" role="alert">
-                        {{ message }}
-                      </div>
-                    {% endfor %}
+              {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                  {{ message }}
+                </div>
+              {% endfor %}
             {% endif %}
-            <form method = "POST" >
-                {% csrf_token %}
-              <div data-mdb-input-init class="form-outline mb-4">
-                <input type="number" id="amount" name= "amount" placeholder="Enter amount" class="form-control" />
-                <label class="form-label" for="amount">Amount ($)</label>
+
+            <form method="POST">
+              {% csrf_token %}
+              <div class="form-floating mb-4">
+                <input type="number" min="1" class="form-control" id="amount" name="amount" placeholder="Enter amount" required>
+                <label for="amount">Donation Amount ($)</label>
               </div>
-  
-              <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
-                Donate
+
+              <button type="submit" class="btn btn-lg btn-warning w-100">
+                <i class="bi bi-cup-hot me-2"></i>Send Coffee ❤️
               </button>
             </form>
+
+            <!-- Support note -->
+            <p class="text-muted small mt-4">
+              Every small contribution helps maintain and improve this platform. Thank you for your support!
+            </p>
+
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 {% endblock content %}

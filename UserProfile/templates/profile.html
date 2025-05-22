@@ -5,67 +5,125 @@
 ShipShop - Profile
 {% endblock title %}
 
+{% block style %}
+body {
+      background: #f4f6f9;
+    }
+
+    .profile-card {
+      border-radius: 20px;
+      background: linear-gradient(to right, #ffffff, #f9fbfd);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+    }
+
+    .profile-image {
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      width: 100%;
+    }
+
+    .btn-custom {
+      border-radius: 30px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .btn-custom:hover {
+      transform: scale(1.02);
+      opacity: 0.95;
+    }
+
+    .profile-info h5 {
+      font-weight: 700;
+    }
+
+    .profile-info p {
+      margin-bottom: 0.4rem;
+      color: #555;
+    }
+
+    .action-buttons .btn {
+      margin: 6px 0;
+    }
+
+    .section-divider {
+      border-top: 1px dashed #bbb;
+      margin: 30px 0;
+    }
+{% endblock style %}
+
+
 {% block navbar %}
 {% include "navbar.html" with first_name=request.user.first_name %}
 {% endblock navbar %}
 
 {% block content %}
-    <section class="w-100 px-4 py-5" style="border-radius: .5rem .5rem 0 0;">
+    <section class="w-100 px-4 py-5">
   <div class="row d-flex justify-content-center">
-    <div class="col col-md-9 col-lg-9 col-xl-9">
-      <div class="card" style="border-radius: 15px;">
-        <div class="card-body p-4">
+    <div class="col-md-10 col-lg-9">
+      <div class="profile-card">
+        {% if messages %}
           <div id="message-container">
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert alert-primary" role="alert">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
+            {% for message in messages %}
+              <div class="alert alert-primary" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="row">
+          <!-- Profile Image and Password -->
+          <div class="col-md-4 text-center">
+            <img src="{% static 'img/OIP.jpeg' %}" alt="Profile Image" class="profile-image mb-3">
+            <a href="/profile/change-password" class="btn btn-outline-primary btn-custom w-100"><i class="fas fa-key"></i> Change Password</a>
           </div>
 
-          <div class="d-flex">
-            <div class="flex-shrink-0 col-3">
-              <img src="{% static 'img/OIP.jpeg' %}"
-                alt="Profile Image" class="img-fluid" style="width: 250px; border-radius: 10px;">
-              <div class="text-center mt-2">
-                <a href="/profile/change-password" class="btn btn-primary flex-grow-1">Change Password</a>
+          <!-- Profile Details and Actions -->
+          <div class="col-md-8 profile-info">
+            <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+            <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
+            <p><i class="fas fa-user-tag"></i> Role: {% if user.isAdmin %}Admin{% else %}General User{% endif %}</p>
+
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <a class="btn btn-outline-primary btn-custom w-100" href="/profile/update-account/{{ user.id }}">
+                  <i class="fas fa-user-edit"></i> Update Profile
+                </a>
+              </div>
+              <div class="col-md-6">
+                <a href="/profile/deactivate-account/{{ user.id }}" class="btn btn-outline-warning btn-custom w-100"
+                   onclick="return confirm('Are you sure you want to deactivate your account?');">
+                   <i class="fas fa-user-slash"></i> Deactivate Account
+                </a>
+              </div>
+              <div class="col-md-12 mt-2">
+                <a href="/profile/delete-account/{{ user.id }}" class="btn btn-outline-danger btn-custom w-100"
+                   onclick="return confirm('Are you sure you want to delete your account?');">
+                   <i class="fas fa-user-times"></i> Delete Account
+                </a>
               </div>
             </div>
 
-            <div class="flex-grow-1 ms-3 my-4">
-              <h5 class="mb-1">{{ user.first_name }} {{ user.last_name }}</h5>
-              <p class="mb-2 pb-1">Email: {{ user.email }}</p>
-              <p class="mb-2 pb-1">Role: {% if user.isAdmin %}Admin{% else %}General User{% endif %}</p>
+            <div class="section-divider"></div>
 
-              <div class="d-flex pt-1 mb-3">
-                <a class="btn btn-outline-primary me-1 flex-grow-1" href="/profile/update-account/{{ user.id }}">Update Profile</a>
-              </div>
-
-              <div class="d-flex pt-1 mb-3">
-                <a href="/profile/deactivate-account/{{ user.id }}" class="btn btn-danger flex-grow-1 mx-1" onclick="return confirm('Are you sure you want to deactivate your account?');">Deactivate Account</a>
-                <a href="/profile/delete-account/{{ user.id }}" class="btn btn-danger flex-grow-1 mx-1" onclick="return confirm('Are you sure you want to delete your account?');">Delete Account</a>
-              </div>
-              
-              <hr class="mt-5">
-
-              <!-- New buttons row -->
-              <div class="d-grid gap-2 ">
-                <a href="/profile/orders" class="btn btn-outline-secondary w-100">Orders</a>
-                <a href="/profile/wishlist" class="btn btn-outline-secondary w-100">Wishlist</a>
-                <a href="/profile/queries" class="btn btn-outline-secondary w-100">Queries</a>
-                <a href="/profile/saved-address" class="btn btn-outline-secondary w-100">Saved Address</a>
-                <a href="/profile/donations" class="btn btn-outline-secondary w-100">Donations</a>
-              </div>
-
+            <!-- Profile Navigation -->
+            <div class="action-buttons">
+              <a href="/profile/orders" class="btn btn-outline-secondary btn-custom w-100"><i class="fas fa-box"></i> My Orders</a>
+              <a href="/profile/wishlist" class="btn btn-outline-secondary btn-custom w-100"><i class="fas fa-heart"></i> Wishlist</a>
+              <a href="/profile/queries" class="btn btn-outline-secondary btn-custom w-100"><i class="fas fa-question-circle"></i> Queries</a>
+              <a href="/profile/saved-address" class="btn btn-outline-secondary btn-custom w-100"><i class="fas fa-map-marker-alt"></i> Saved Address</a>
+              <a href="/profile/reviews" class="btn btn-outline-secondary btn-custom w-100"><i class="fas fa-star"></i> My Reviews</a>
+              <a href="/profile/donations" class="btn btn-outline-secondary btn-custom w-100"><i class="fas fa-hand-holding-heart"></i> Donations</a>
             </div>
-          </div>
 
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 
 {% endblock content %}

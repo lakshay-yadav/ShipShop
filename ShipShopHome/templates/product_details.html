@@ -1,0 +1,111 @@
+{% extends "master.html" %}
+
+{% load static %}
+
+{% block title %}
+ShipShop - Cart 
+{% endblock title %}
+
+{% block navbar %}
+{% include "navbar.html" with first_name=request.user.first_name %}
+{% endblock %}
+
+{% block style %}
+body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .product-container {
+      margin-top: 60px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .product-image {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      border-right: 1px solid #e9ecef;
+    }
+
+    .badge-new {
+      background-color: #28a745;
+    }
+
+    .badge-discount {
+      background-color: #dc3545;
+    }
+
+    .product-price {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #343a40;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #6c757d;
+      font-size: 1rem;
+    }
+
+    .buy-btn {
+      background-color: #007bff;
+      color: white;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-size: 1rem;
+    }
+
+    .buy-btn:hover {
+      background-color: #0056b3;
+    }
+    img{
+        width: 250px
+    }
+{% endblock style %}
+
+
+
+{% block content %}
+<div class="container product-container p-5 pb-5">
+  {% include "message_display.html" %}
+  <div class="row">
+    <div class="col-md-4 mb-5">
+      <img src="{% static "img/phone.png" %}?text={{ product.name|urlencode }}" alt="{{ product.name }}" class="product-image img-fluid rounded-start">
+    </div>
+
+    <div class="col-md-8 d-flex flex-column justify-content-center p-4">
+      <h2 class="fw-bold">{{ product.name }}
+        {% if product.new %}
+          <span class="badge badge-new ms-2">New</span>
+        {% endif %}
+      </h2>
+
+      <p class="text-muted">{{ product.description }}</p>
+
+      <div class="mb-3">
+        {% if product.discount > 0 %}
+          <span class="original-price me-2">${{ product.price }}</span>
+          <span class="product-price">${{ product.price|floatformat:2|add:"-"|add:product.discount|floatformat:2 }}</span>
+          <span class="badge badge-discount ms-2">-{{ product.discount|floatformat:0 }}</span>
+        {% else %}
+          <span class="product-price">${{ product.price }}</span>
+        {% endif %}
+      </div>
+
+      <p class="text-secondary">Stock: {{ product.stock }} | Category: <strong>{{ product.category.name }}</strong></p>
+
+      {% if product.stock > 0 %}
+        <a href="#" class="btn btn-success mt-3">Add to Cart</a>
+      {% else %}
+        <span class="text-danger fw-bold mt-3">Out of Stock</span>
+      {% endif %}
+      <a href="/profile/add-to-wishlist/{{product.id}}" class="btn btn-success mt-3">Wishlist</a>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

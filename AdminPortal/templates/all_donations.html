@@ -9,71 +9,80 @@ Admin Portal - All Donations
 {% endblock %}
 
 {% block content %}
-    <section class="w-100 px-4 py-5" style=" border-radius: .5rem .5rem 0 0;">
-        <div class="row d-flex justify-content-center">
-          <div class="col col-md-9 col-lg-11 col-xl-11">
-            <div class="card" style="border-radius: 15px;">
-              <div class="card-body p-4">
-                {% include "message_display.html" %}
+    <section class="w-100 px-3 py-5 bg-light">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
 
-                <h1 class="text-center my-3 pb-3">Admin Dashboard</h1>
+          {% include "message_display.html" %}
 
-                <form method="GET" class="w-100 mb-3">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap">
-                            {% if email %}
-                                <div class="me-auto mb-2">
-                                    <h5 class="mb-0">Search for "{{ email }}"</h5>
-                                </div>
-                                {% else %}
-                                <div></div>
-                            {% endif %}
-                            <div class="d-flex align-items-center flex-nowrap" style="gap: 10px;">
-                                <input type="text" name="q" class="form-control" placeholder="Search for email..." style="max-width: 250px;">
-                                <button type="submit" class="btn btn-primary">Search</button>
-                                <a href="/admin-portal/all-donations" class="btn btn-secondary text-nowrap">Clear Search</a>
-                            </div>
-                        </div>
-                    </form>
+          <h1 class="text-center text-primary mb-4">🎁 Admin Dashboard – Donations</h1>
+          <hr class="mb-4">
 
-                <hr>
-                
-                <div class="container mt-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2 class="mb-0">All Donations</h2>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="sortSelect" class="form-label"><strong>Sort by:</strong></label>
-                        <select id="sortSelect" class="form-select" onchange="location = this.value;">
-                            <option value="?sort_by=-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Latest</option>
-                            <option value="?sort_by=created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Oldest</option>
-                            <option value="?sort_by=amount" {% if sort_by == 'amount' %}selected{% endif %}>Low Donations</option>
-                            <option value="?sort_by=-amount" {% if sort_by == '-amount' %}selected{% endif %}>High Donations</option>
-                        </select>
-                    </div>
-
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Amount</th>
-                            <th>Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for donation in allDonations %}
-                            <tr>
-                                <td>@{{ donation.user.email }}</td>
-                                <td>{{ donation.amount }} $</td>
-                                <td>{{ donation.created_at }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+          <!-- Search Bar -->
+          <form method="GET" class="mb-4">
+            <div class="row gy-2 align-items-center">
+              <div class="col-md-auto">
+                {% if email %}
+                  <h5 class="mb-0">Results for: <span class="text-info">"{{ email }}"</span></h5>
+                {% endif %}
+              </div>
+              <div class="col-md">
+                <input type="text" name="q" class="form-control" placeholder="Search for email...">
+              </div>
+              <div class="col-md-auto d-flex gap-2">
+                <button type="submit" class="btn btn-outline-primary">🔍 Search</button>
+                <a href="/admin-portal/all-donations" class="btn btn-outline-secondary">Clear</a>
               </div>
             </div>
+          </form>
+
+          <!-- Sort -->
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+            <h2 class="h5 text-dark mb-2">📄 All Donations</h2>
+            <div class="mb-2 d-flex align-items-center">
+              <label for="sortSelect" class="me-2 fw-semibold">Sort by:</label>
+              <select id="sortSelect" class="form-select form-select-sm w-auto"
+                      onchange="location = this.value;">
+                <option value="?sort_by=-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Latest</option>
+                <option value="?sort_by=created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Oldest</option>
+                <option value="?sort_by=amount" {% if sort_by == 'amount' %}selected{% endif %}>Low Donations</option>
+                <option value="?sort_by=-amount" {% if sort_by == '-amount' %}selected{% endif %}>High Donations</option>
+              </select>
+            </div>
           </div>
+
+          <!-- Table -->
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle text-center">
+              <thead class="table-light">
+                <tr>
+                  <th>User Email</th>
+                  <th>Amount ($)</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for donation in allDonations %}
+                  <tr>
+                    <td>@{{ donation.user.email }}</td>
+                    <td class="text-success fw-bold">{{ donation.amount|floatformat:2 }}</td>
+                    <td>{{ donation.created_at|date:"M d, Y H:i" }}</td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="3" class="text-muted">No donations found.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% endblock content %}

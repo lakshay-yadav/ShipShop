@@ -13,8 +13,12 @@ urlpatterns = [
     path('orders',orders,name="orders"),
 
     path('wishlist',wishlist,name="wishlist"),
+    path('add-to-wishlist/<product_id>',add_to_wishlist,name="add_to_wishlist"),
+    path('delete-from-wishlist/<product_id>',delete_from_wishlist,name="delete_from_wishlist"),
 
     path('donations',donations,name="donations"),
+
+    path('reviews',reviews,name="reviews"),
     
     path('saved-address',saved_address,name="saved_address"),
     path('add-new-address',add_new_address,name="add_new_address"),

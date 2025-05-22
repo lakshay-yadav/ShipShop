@@ -18,4 +18,8 @@ urlpatterns = [
     path('product/add-category',add_category,name="add_category"),
 
     path('product/all-product',all_product,name="all_product"),
+    path('product/add-product',add_product,name="add_product"),
+    path('product/delete-product/<id>',delete_product,name="delete_product"),
+    path('product/edit-product/<id>',edit_product,name="edit_product"),
+
 ]

@@ -1,5 +1,7 @@
 {% extends "master.html" %} 
 
+{% load static %}
+
 {% block title %}
 About us
 {% endblock title %} 
@@ -9,38 +11,51 @@ About us
 {% endblock %} 
 
 {% block content %}
-<section style="background-color: #eee">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col col-lg-12 col-xl-12">
-        <div class="card rounded-3">
-          <div class="card-body p-4">
-            <h1 class="mb-4">📝 About Us</h1>
+<section class="container my-5 py-5 mb-5">
 
-            <p>Welcome to <strong>ShipShop</strong> – your simple and powerful to-do list manager.</p>
-
-            <p>Our mission is to help you stay organized, focused, and productive by making it easy to manage your daily tasks.
-                Whether you're a student, professional, or anyone with goals to reach, To-Do offers a clean and intuitive interface
-                to plan your day effectively.</p>
-
-            <h4 class="mt-4">✅ What We Offer</h4>
-            <ul>
-                <li>Create and manage to-do items effortlessly</li>
-                <li>Track your progress with task status updates</li>
-                <li>Edit, update, and remove tasks anytime</li>
-                <li>A user-friendly dashboard to view all your tasks at a glance</li>
-            </ul>
-
-            <h4 class="mt-4">🔐 Your Data, Your Privacy</h4>
-            <p>We value your time and your privacy. All your information is stored securely and never shared.</p>
-
-            <h4 class="mt-4">👤 About the Creator</h4>
-            <p><strong>To-Do</strong> is developed by <strong>Lakshay Yadav</strong>, a passionate developer committed to creating tools
-                that make life a little easier, one task at a time.</p>
-          </div>
-        </div>
+  <div class="row align-items-center">
+    <div class="col-md-4">
+      <img src="{% static "img/ShipShop.png" %}" class="img-fluid rounded mx-auto d-block" style="max-height: 450px;" alt="ShipShop store" />
+    </div>
+    <div class="col-md-8">
+      <div class="text-center">
+        <h1 class="fw-bold">About ShipShop</h1>
+      <p class="text-muted fs-5">Where shopping meets simplicity and style.</p>
       </div>
+      <div><br><br><br><br></div>
+      <h3 class="fw-semibold">Who We Are</h3>
+      <p>
+        <strong>ShipShop</strong> is a modern, user-friendly shopping platform designed to bring you a seamless online shopping experience. Whether you're looking for the latest electronics, fashion trends, or household items, we’ve got you covered with a curated selection of quality products.
+      </p>
+      <h4 class="fw-semibold mt-4">Our Mission</h4>
+      <p>
+        To make online shopping fast, fun, and stress-free. We focus on customer satisfaction, affordable pricing, and reliable delivery so you can shop with confidence.
+      </p>
     </div>
   </div>
+
+  <div class="row mt-5">
+    <div class="col-md-4 text-center">
+      <i class="fas fa-shipping-fast fa-2x text-primary mb-2"></i>
+      <h5 class="fw-bold">Fast Delivery</h5>
+      <p>Quick and reliable shipping so you get your items when you need them.</p>
+    </div>
+    <div class="col-md-4 text-center">
+      <i class="fas fa-lock fa-2x text-primary mb-2"></i>
+      <h5 class="fw-bold">Secure Payments</h5>
+      <p>Encrypted transactions and trusted gateways keep your data safe.</p>
+    </div>
+    <div class="col-md-4 text-center">
+      <i class="fas fa-heart fa-2x text-primary mb-2"></i>
+      <h5 class="fw-bold">Customer First</h5>
+      <p>We listen, improve, and serve with a smile — your satisfaction is our priority.</p>
+    </div>
+  </div>
+
+  <div class="text-center my-5">
+    <p class="fs-5">Join thousands of happy customers who trust <strong>ShipShop</strong> for their everyday shopping needs.</p>
+    <a href="/" class="btn btn-primary px-4 py-2 mt-2">Start Shopping</a>
+  </div>
 </section>
+
 {% endblock content %}
