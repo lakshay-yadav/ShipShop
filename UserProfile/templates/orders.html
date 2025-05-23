@@ -8,6 +8,121 @@ ShipShop - Orders
 {% include "navbar.html" with first_name=request.user.first_name %}
 {% endblock %}
 
+{% block style %}
+<style>
+  body {
+    background: #f8f9fa;
+  }
+
+  .order-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+  }
+
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+
+  .badge-status {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+  }
+
+  .status-New { background-color: #007bff; color: white; }
+  .status-Accepted { background-color: #ffc107; color: #1c1c1c; }
+  .status-Completed { background-color: #28a745; color: white; }
+  .status-Cancelled { background-color: #dc3545; color: white; }
+
+  .product-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  .product-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .product-name {
+    font-weight: 500;
+  }
+
+  .order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+
+  .bg-success {
+  background-color: #28a745 !important;
+  color: white;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+  color: white;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-This is orders page 
-{% endblock content %}
+<div class="container py-5">
+  <h2 class="mb-4 text-center">My Orders</h2>
+
+  {% if orders %}
+    {% for order in orders %}
+    <div class="order-card">
+      <div class="order-header">
+  <div>
+    <h5>Order #{{ order.order_number }}</h5>
+    <p class="text-muted mb-1">Placed on {{ order.created_at|date:"F d, Y" }}</p>
+    <p class="mb-1">Ship to: {{ order.address.first_name }} {{ order.address.last_name }}, {{ order.address.city }}, {{ order.address.state }}</p>
+  </div>
+  <div class="text-end">
+    <span class="badge badge-status status-{{ order.status }}">{{ order.status }}</span><br>
+    {% if order.is_ordered %}
+      <span class="badge bg-success mt-2">Placed Successfully</span>
+    {% else %}
+      <span class="badge bg-danger mt-2">Not Placed</span>
+    {% endif %}
+  </div>
+</div>
+
+
+      <ul class="product-list">
+        {% for item in order.orderproduct_set.all %}
+        <a href="/product-details/{{item.product.id}}" class="text-decoration-none">
+            <li class="product-item">
+          <span class="product-name">{{ item.product.name }} (x{{ item.quantity }})</span>
+          <span>${{ item.product_price|floatformat:2 }}</span>
+        </li>
+        </a>
+        {% endfor %}
+      </ul>
+
+      <div class="order-footer">
+        <span>Total: ${{ order.order_total|floatformat:2 }}</span>
+        {% if order.status == "New" %}
+          <a href="" class="btn btn-sm btn-outline-danger">Cancel Order</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-center text-muted">You have no orders yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -7,6 +7,8 @@ from django.core.mail import send_mail
 from utils.email_utils import send_email_async
 from utils.payment_session import *
 from .models import Donation
+from Order.models import Payment,Order,OrderProduct
+from Cart.models import CartItem
 
 # Create your views here.
 @login_required(login_url="/auth/login")
@@ -43,6 +45,11 @@ def payment_failed(request):
     if purpose == "Donation":
         messages.info(request,"Payment Error. Please try again.")
         return redirect("/payment/donate")
+
+    elif purpose == 'order':
+        order_id = request.GET.get('order_id')
+        messages.info(request,"Payment failed.Please try again")
+        return redirect("/cart")
     
     else:
         return redirect("/")
@@ -64,4 +71,15 @@ def payment_success(request):
         )
         messages.info(request,"Payment successfully done. Thanks for your contribution.")
     
+    elif purpose == "order":
+        order_id = request.GET.get('order_id')
+        order = Order.objects.get(id = order_id)
+        order.is_ordered = True
+        order.save()
+
+        cart_items = CartItem.objects.filter(user = request.user)
+        cart_items.delete()
+
+        messages.info(request,"Order placed successfully.")
+        
     return redirect("/")

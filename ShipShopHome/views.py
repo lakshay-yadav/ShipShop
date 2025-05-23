@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from utils.email_utils import send_email_async
 from Authentication.models import CustomUser as User
+from UserProfile.models import Wishlist
 from ShipShopHome.models import Query,Category,Product
 from .models import Query
 from decouple import config
@@ -18,7 +19,13 @@ def home(request):
 
 def product_details(request,product_id):
     product = Product.objects.get(id = product_id)
-    return render(request,"product_details.html",{"product":product,})
+    related_products = Product.objects.filter(category = product.category)[:4]
+    in_wishlist = False
+    if request.user.is_authenticated:
+        in_wishlist = Wishlist.objects.filter(user=request.user, product=product).exists()
+    
+    
+    return render(request,"product_details.html",{"product":product,"related_products":related_products,"in_wishlist":in_wishlist,})
 
 
 def policy(request):
@@ -75,3 +82,4 @@ def product_by_category(request,name):
         "query" : query
     }
     return render(request,"product_by_category.html",context)
+

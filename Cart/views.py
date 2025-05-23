@@ -40,4 +40,16 @@ def remove_item(request,id):
 
 @login_required(login_url="auth/login")
 def add_item(request,product_id):
+    product = Product.objects.get(id = product_id)
+    user = request.user
+    quantity = 1
+
+    if request.method == "POST":
+        quantity = request.POST.get('quantity')
+
+    CartItem.objects.create(
+        product = product,
+        user = user,
+        quantity = quantity,
+    )
     return redirect("/cart")

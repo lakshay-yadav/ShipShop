@@ -10,6 +10,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from decouple import config
 from utils.email_utils import send_email_async
+from Order.models import Order
 
 
 @login_required(login_url="/auth/login")
@@ -60,7 +61,8 @@ def change_password(request):
 
 @login_required(login_url="/auth/login")
 def orders(request):
-    return render(request,"orders.html")
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request,"orders.html", {'orders': orders})
 
 
 @login_required(login_url="/auth/login")
@@ -94,7 +96,7 @@ def add_to_wishlist(request,product_id):
 def delete_from_wishlist(request,product_id):
     next_url = request.GET.get('next')
     user = request.user
-    wishlist_item = Wishlist.objects.filter(user = user)
+    wishlist_item = Wishlist.objects.filter(user = user,product__id = product_id)
     if wishlist_item:
         wishlist_item.delete()
         messages.info(request,"Item removed from Wishlist")

@@ -47,7 +47,7 @@ ShipShop - Cart
         <strong>${{ item.line_total }}</strong>
       </div>
       <div class="col-md-1 text-end">
-         <a href=f"/cart/remove-item/{{item.id}}" class="btn btn-primary w-100">Remove</a>
+         <a href="/cart/remove-item/{{item.id}}" class="btn btn-primary w-100">Remove</a>
       </div>
     </div>
     {% empty %}
@@ -56,7 +56,6 @@ ShipShop - Cart
 
     <hr>
 
-    <!-- Cart Total -->
     <div class="row justify-content-end">
       <div class="col-md-4 cart-total">
         <h5>Cart Summary</h5>
@@ -74,7 +73,7 @@ ShipShop - Cart
             <strong>${{ total }}</strong>
           </li>
         </ul>
-        <a href="" class="btn btn-primary w-100">Proceed to Checkout</a>
+        <a href="/orders/checkout" class="btn btn-primary w-100">Proceed to Checkout</a>
       </div>
     </div>
   </div>

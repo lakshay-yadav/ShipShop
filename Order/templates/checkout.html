@@ -1,0 +1,196 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}ShipShop - Checkout{% endblock title %}
+
+{% block navbar %}
+  {% include "navbar.html" with first_name=request.user.first_name %}
+{% endblock %}
+
+{% block style %}
+<style>
+  body {
+    background-color: #f9f5f0;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .checkout-container {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+
+  .card-custom {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+  }
+
+  .card-header-custom {
+    color: #d99879;
+    border-bottom: 2px solid #f4cca4;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+  }
+
+  .form-control,
+  textarea {
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    padding: 12px 16px;
+    font-size: 1rem;
+  }
+
+  .form-control:focus,
+  textarea:focus {
+    box-shadow: 0 0 0 0.25rem rgba(244, 204, 164, 0.5);
+    border-color: #f4cca4;
+  }
+
+  .btn-checkout,
+  .btn-outline-secondary,
+  .btn-primary {
+    background-color: #f4cca4;
+    color: #1c1427;
+    font-weight: bold;
+    padding: 14px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+  }
+
+  .btn-checkout:hover,
+  .btn-outline-secondary:hover,
+  .btn-primary:hover {
+    background-color: #e2b487;
+    color: #000;
+  }
+
+  .order-table th,
+  .order-table td {
+    padding: 14px;
+    vertical-align: middle;
+    font-size: 1rem;
+  }
+
+  .order-total {
+    font-size: 1.25rem;
+    color: #d99879;
+    font-weight: bold;
+  }
+
+  .form-check-label {
+    font-size: 0.95rem;
+    color: #333;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container checkout-container">
+  <div class="mb-4">
+    <a href="/cart" class="btn btn-outline-secondary">
+      &larr; Back to Cart
+    </a>
+  </div>
+
+  {% if user_addresses %}
+  {% else %}
+        
+    <form method="POST">
+      {% csrf_token %}
+        <p class="text-muted">No saved addresses. Please add a new one below.</p>
+      <div class="card-custom">
+    <h3 class="card-header-custom">Add a New Address</h3>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <input type="text" name="first_name" class="form-control" required placeholder="First Name">
+        </div>
+        <div class="col-md-6">
+          <input type="text" name="last_name" class="form-control" placeholder="Last Name">
+        </div>
+        <div class="col-md-12">
+          <input type="text" name="address_line1" class="form-control" required placeholder="Address Line 1">
+        </div>
+        <div class="col-md-12">
+          <input type="text" name="address_line2" class="form-control" required placeholder="Address Line 2">
+        </div>
+        <div class="col-md-6">
+          <input type="text" name="landmark" class="form-control" required placeholder="Landmark">
+        </div>
+        <div class="col-md-6">
+          <input type="text" name="city" class="form-control" required placeholder="City">
+        </div>
+        <div class="col-md-6">
+          <select name="state" required class="form-control">
+            <option value="">Select State</option>
+            {% for code, state in STATE_CHOICES %}
+              <option value="{{ code }}">{{ state }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <input type="number" name="pincode" class="form-control" required placeholder="Pincode" maxlength="6">
+        </div>
+        <div class="text-end">
+          <button type="submit" class="btn btn-primary" name="form_type" value="add_address">Add New Address</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  {% endif %}
+
+<form method="POST" class="pb-5">
+  <div class="card-custom">
+    <h3 class="card-header-custom">Choose a Saved Address</h3>
+    {% if user_addresses %}
+        {% for addr in user_addresses %}
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="radio" name="selected_address" id="address{{ forloop.counter }}" value="{{ addr.id }}" {% if forloop.first %}checked{% endif %}>
+            <label class="form-check-label" for="address{{ forloop.counter }}">
+              <strong>{{ addr.first_name }} {{ addr.last_name }}</strong>, 
+              {{ addr.address_line1 }}, {{ addr.address_line2 }}, 
+              {{ addr.landmark }}, {{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}
+            </label>
+          </div>
+        {% endfor %}  
+        {% endif %}
+  </div>
+
+  
+    {% csrf_token %}
+    <div class="card-custom">
+      <h3 class="card-header-custom">Your Order</h3>
+      <div class="table-responsive">
+        <table class="table order-table">
+          <thead class="table-light">
+            <tr>
+              <th>Product</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cart_item in cart_items %}
+              <tr>
+                <td>{{ cart_item.product.name }} x {{ cart_item.quantity }}</td>
+                <td>${{ cart_item.sub_total }}</td>
+              </tr>
+            {% endfor %}
+            <tr>
+              <td>Shipping and Handling</td>
+              <td>${{ handing }}</td>
+            </tr>
+            <tr class="order-total">
+              <td>Order Total</td>
+              <td>${{ order_total }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button type="submit" class="btn btn-checkout btn-outline-warning w-100 mt-4" name="form_type" value="order">Place Order</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

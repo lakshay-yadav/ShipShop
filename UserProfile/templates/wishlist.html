@@ -72,10 +72,11 @@ body {
 
   {% if wishlist_items %}
   <div class="row g-4">
-    {% for item in wishlist_items %}
-    <div class="col-sm-6 col-md-4 col-lg-3">
+  {% for item in wishlist_items %}
+  <div class="col-sm-6 col-md-4 col-lg-3">
+    <a href="/product-details/{{item.product.id}}" class="text-decoration-none text-dark">
       <div class="card product-card h-100">
-        <img src="{% static "img/phone.png" %}?text={{ item.product.name|urlencode }}" class="card-img-top" alt="{{ item.product.name }}">
+        <img src="{% static 'img/phone.png' %}?text={{ item.product.name|urlencode }}" class="card-img-top" alt="{{ item.product.name }}">
         <div class="card-body">
           <h5 class="card-title">{{ item.product.name }}</h5>
           <p class="card-text text-muted small">{{ item.product.description|truncatewords:15 }}</p>
@@ -89,16 +90,18 @@ body {
               <span class="product-price">${{ item.product.price }}</span>
             {% endif %}
           </div>
-
-          <div class="d-flex justify-content-between">
-            <a href="" class="btn btn-outline-primary btn-sm">Add to Cart</a>
-            <a href="/profile/delete-from-wishlist/{{ item.product.id }}?next={{ request.path }}" class="btn btn-outline-danger btn-sm">Remove</a>
-          </div>
+          <div class="mt-2 d-flex justify-content">
+              <a href="/cart/add-item/{{ item.product.id }}" class="btn btn-outline-primary btn-sm col mx-2">Add to Cart</a>
+              <a href="/profile/delete-from-wishlist/{{ item.product.id }}?next={{ request.path }}" class="btn btn-outline-danger col btn-sm mx-2">Remove</a>
+            </div>
         </div>
       </div>
-    </div>
-    {% endfor %}
+    </a>
+    
   </div>
+  {% endfor %}
+</div>
+
   {% else %}
   <div class="text-center mt-5">
     <p class="text-muted">Your wishlist is empty. Start adding products you love!</p>
